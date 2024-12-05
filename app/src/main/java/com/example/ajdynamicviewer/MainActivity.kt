@@ -3,50 +3,38 @@ package com.example.ajdynamicviewer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.ajdynamicviewer.ui.theme.AJDynamicViewerTheme
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.ajdynamicviewer.ui.theme.DynamicImageViewerTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            ImageViewerScreen()
-            AJDynamicViewerTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+            DynamicImageViewerTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    ImageViewerScreen()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AJDynamicViewerTheme {
-        Greeting("Android")
-        ImageViewerScreen()
-    }
-}
 @Composable
 fun ImageViewerScreen() {
     var currentImage by remember { mutableStateOf(R.drawable.image1) }
@@ -58,37 +46,37 @@ fun ImageViewerScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        // Display the image
-        Image(
-            painter = painterResource(id = currentImage),
-            contentDescription = "Displayed Image",
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-        )
+        Crossfade(targetState = currentImage) { imageId ->
+            Image(
+                painter = painterResource(id = imageId),
+                contentDescription = "Displayed Image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+            )
+        }
 
-        // Row for buttons
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
             Button(
                 onClick = { currentImage = R.drawable.image1 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
             ) {
                 Text("Red")
             }
 
             Button(
                 onClick = { currentImage = R.drawable.image2 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Green)
             ) {
                 Text("Green")
             }
 
             Button(
                 onClick = { currentImage = R.drawable.image3 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue)
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Blue)
             ) {
                 Text("Blue")
             }
